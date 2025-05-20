@@ -31,12 +31,16 @@ public class CharacterMovement : MonoBehaviour
         vector3s.Add(new Vector3(-move_speed_sum, 0, 0));
         vector3s.Add(new Vector3(0, 0, move_speed_sum));
         vector3s.Add(new Vector3(0, 0, -move_speed_sum));
+
+        return;
     }
 
     // Update is called once per frame
     void Update()
     {
         int index = 0;
+
+
         foreach (Vector3 element in this.vector3s)
         {
             if (Input.GetKey(this.key_code_arr[index]))
@@ -46,5 +50,6 @@ public class CharacterMovement : MonoBehaviour
             index++;
         }
         Debug.Log(this.transform.position);
+        return;
     }
 }
