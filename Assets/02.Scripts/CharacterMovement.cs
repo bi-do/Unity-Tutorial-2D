@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public float move_speed = 1f;
+    public float move_speed = 0f;
 
     /// <summary> 실제 적용되는 이동 속도 ( 설정 이동 속도 * deltatime )</summary>
     private float move_speed_sum = 0;
