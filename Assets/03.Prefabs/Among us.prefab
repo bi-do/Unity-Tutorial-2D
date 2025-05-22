@@ -557,6 +557,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5327810832196302385}
+  - component: {fileID: -9072216841661055723}
   m_Layer: 0
   m_Name: Among us
   m_TagString: Untagged
@@ -573,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 8397382546549554186}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.81, y: 0, z: -1.71}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -584,3 +585,16 @@ Transform:
   - {fileID: 951080230452536701}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-9072216841661055723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8397382546549554186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30679ef16bdb114cb044cbe5e305dee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  move_speed: 0.5

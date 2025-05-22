@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Unity.Burst.Intrinsics;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 
@@ -24,23 +25,32 @@ public class CharacterMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // this.transform.position = this.transform.position + Vector3.forward;
-        this.move_speed_sum = this.move_speed * Time.deltaTime;
-
-        vector3s.Add(new Vector3(move_speed_sum, 0, 0));
-        vector3s.Add(new Vector3(-move_speed_sum, 0, 0));
-        vector3s.Add(new Vector3(0, 0, move_speed_sum));
-        vector3s.Add(new Vector3(0, 0, -move_speed_sum));
-
+        // this.Input_Custom_Initialize();
         return;
     }
 
     // Update is called once per frame
     void Update()
     {
+        this.Input_Legacy();
+        return;
+    }
+
+    /// <summary> 인풋_사용자 지정 초기화 </summary>
+    private void Input_Custom_Initialize()
+    {
+        this.move_speed_sum = this.move_speed * Time.deltaTime;
+
+        vector3s.Add(new Vector3(move_speed_sum, 0, 0));
+        vector3s.Add(new Vector3(-move_speed_sum, 0, 0));
+        vector3s.Add(new Vector3(0, 0, move_speed_sum));
+        vector3s.Add(new Vector3(0, 0, -move_speed_sum));
+    }
+
+    /// <summary> 인풋_사용자 지정 </summary>
+    private void Input_Custom()
+    {
         int index = 0;
-
-
         foreach (Vector3 element in this.vector3s)
         {
             if (Input.GetKey(this.key_code_arr[index]))
@@ -50,6 +60,17 @@ public class CharacterMovement : MonoBehaviour
             index++;
         }
         Debug.Log(this.transform.position);
-        return;
+    }
+
+    /// <summary> 인풋 시스템 활용 ( Legacy ) </summary>
+    private void Input_Legacy()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        Vector3 temp_vec3 = new Vector3(h, 0, v);
+        Debug.Log($"현재 입력 : {temp_vec3}");
+
+        this.transform.position += temp_vec3 * this.move_speed * Time.deltaTime;
     }
 }
