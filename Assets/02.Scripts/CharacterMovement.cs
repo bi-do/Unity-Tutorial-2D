@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using TreeEditor;
 using Unity.Burst.Intrinsics;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
@@ -65,12 +66,16 @@ public class CharacterMovement : MonoBehaviour
     /// <summary> 인풋 시스템 활용 ( Legacy ) </summary>
     private void Input_Legacy()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
 
-        Vector3 temp_vec3 = new Vector3(h, 0, v);
+        Vector3 temp_vec3 = new Vector3(h, 0, v).normalized;
+
         Debug.Log($"현재 입력 : {temp_vec3}");
 
         this.transform.position += temp_vec3 * this.move_speed * Time.deltaTime;
+
+        this.transform.LookAt(this.transform.position + temp_vec3);
     }
+
 }

@@ -560,7 +560,7 @@ GameObject:
   - component: {fileID: -9072216841661055723}
   m_Layer: 0
   m_Name: Among us
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -597,4 +597,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c30679ef16bdb114cb044cbe5e305dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move_speed: 0.5
+  move_speed: 3
