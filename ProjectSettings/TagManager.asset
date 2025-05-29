@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Cube
   - Ground
+  - Score_10
+  - Score_20
+  - Score_30
+  - GameOver
   layers:
   - Default
   - TransparentFX

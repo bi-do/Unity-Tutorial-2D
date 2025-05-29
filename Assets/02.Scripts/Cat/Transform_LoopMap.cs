@@ -8,7 +8,7 @@ public class Transform_LoopMap : MonoBehaviour
 
     // public float sprite_count = 2f;
 
-    public float return_pos_x = 15f;
+    private float return_pos_x = 15f;
 
     private float random_height = 0;
 
