@@ -9,7 +9,9 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     public float move_speed = 0f;
-
+    
+    public static int coin_count = 0;
+    
     /// <summary> 실제 적용되는 이동 속도 ( 설정 이동 속도 * deltatime )</summary>
     private float move_speed_sum = 0;
 
@@ -23,14 +25,12 @@ public class CharacterMovement : MonoBehaviour
     /// <summary> 적용되는 벡터 값 배열 </summary>
     private List<Vector3> vector3s = new List<Vector3>();
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // this.Input_Custom_Initialize();
         return;
     }
 
-    // Update is called once per frame
     void Update()
     {
         this.Input_Legacy();
