@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class ColliderEvent : MonoBehaviour
 {
+    public GameObject fade_UI;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            this.fade_UI.SetActive(true);
             Debug.Log("게임 오버");
         }
     }

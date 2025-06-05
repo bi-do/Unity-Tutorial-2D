@@ -3,6 +3,7 @@ using UnityEngine;
 public class DoorEvent : MonoBehaviour
 {
     private Animator door_animator;
+    public GameObject UI_doorlock;
 
     void Start()
     {
@@ -14,7 +15,8 @@ public class DoorEvent : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            this.door_animator.SetTrigger("Open");
+            this.UI_doorlock.SetActive(true);
+            // this.door_animator.SetTrigger("Open");
         }
     }
 
@@ -23,7 +25,8 @@ public class DoorEvent : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            this.door_animator.SetTrigger("Close");
+            this.UI_doorlock.SetActive(false);
+            // this.door_animator.SetTrigger("Close");
         }
     }
 
