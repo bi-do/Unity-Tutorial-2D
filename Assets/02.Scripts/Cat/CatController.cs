@@ -48,7 +48,17 @@ public class CatController : MonoBehaviour
 
             // 사운드 재생
             this.sound_manager.OnJumpSound();
+
+
         }
+        this.Jump_Rotate();
+    }
+
+    private void Jump_Rotate()
+    {
+        var catRotation = this.transform.eulerAngles;
+        catRotation.z = this.cat_rb.linearVelocityY * 3f;
+        this.transform.eulerAngles = catRotation;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
