@@ -11,23 +11,17 @@ public class FadeRoutine : MonoBehaviour
     /// <summary> 로직에 사용될 타이머 변수 </summary>
     private float timer = 0f;
 
-
-    void Start()
+    public void OnFade(float param_time , Color param_color)
     {
-        StartCoroutine(this.FadeRoutineA(3 , false));
+        StartCoroutine(this.Fade(param_time, param_color));
     }
-    IEnumerator FadeRoutineA(float fade_time , bool isFadeIn)
+
+    IEnumerator Fade(float fade_time, Color param_color)
     {
-        float value = 1;
-        if (isFadeIn)
-        {
-            this.timer = 1f;
-            value = -1;
-        }
         while (this.timer <= 1)
         {
-            timer += (Time.deltaTime / fade_time) * value;
-            this.image.color = new Color(0, 0, 0, this.timer);
+            timer += Time.deltaTime / fade_time;
+            this.image.color = new Color(param_color.r,param_color.g, param_color.b, this.timer);
             yield return null;
         }
     }
