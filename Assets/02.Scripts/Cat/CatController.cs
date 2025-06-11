@@ -1,21 +1,21 @@
+using System.Collections;
 using Cat;
 using UnityEngine;
 
 public class CatController : MonoBehaviour
 {
     public SoundManager sound_manager; // 사운드 매니저
+    public VideoManager video_manager; // 비디오 매니저
 
+    public GameObject play_UI;
     public GameObject game_over_UI;
     public GameObject fade_UI;
-
-    public GameObject happy_video;
-    public GameObject sad_video;
 
     private Rigidbody2D cat_rb;
     private Animator cat_ani;
 
     /// <summary> 클리어에 필요한 사과 개수 </summary>
-    private int clear_count = 5;
+    private int clear_count = 1;
 
     /// <summary> 점프력 </summary>
     public float jump_force = 7f;
@@ -81,11 +81,13 @@ public class CatController : MonoBehaviour
             // 10점 이상 획득 시 화이트 페이드 활성화
             if (GameManager.score >= this.clear_count)
             {
+                // 고양이 콜라이더 비활성화
                 this.GetComponent<CircleCollider2D>().enabled = false;
+
                 fade_UI.SetActive(true);
                 fade_UI.GetComponent<FadeRoutine>().OnFade(3f, Color.white);
 
-                Invoke("OnHappyVideo", 5f);
+                StartCoroutine(EndingRoutine(true));
             }
         }
     }
@@ -102,6 +104,9 @@ public class CatController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Pipe")) // 파이프 충돌 시
         {
+            // 고양이 콜라이더 비활성화
+            this.GetComponent<CircleCollider2D>().enabled = false;
+
             // 충돌 사운드 재생
             this.sound_manager.OnColliderSound();
 
@@ -112,25 +117,17 @@ public class CatController : MonoBehaviour
             // 화면 페이드 ( 게임 오버 )
             this.fade_UI.GetComponent<FadeRoutine>().OnFade(3f, Color.black);
 
-            Invoke("OnSadVideo", 5f);
+            StartCoroutine(EndingRoutine(false));
         }
     }
 
-    void OnHappyVideo()
+    IEnumerator EndingRoutine(bool param_isClear)
     {
-        this.happy_video.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        this.video_manager.VideoPlay(param_isClear);
+
+        this.sound_manager.audio_source.mute = true;
         this.fade_UI.SetActive(false);
         this.game_over_UI.SetActive(false);
-
-        sound_manager.audio_source.mute = true;
-    }
-
-    void OnSadVideo()
-    {
-        this.sad_video.SetActive(true);
-        this.fade_UI.SetActive(false);
-        this.game_over_UI.SetActive(false);
-
-        sound_manager.audio_source.mute = true;
     }
 }
