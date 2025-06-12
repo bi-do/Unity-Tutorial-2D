@@ -6,7 +6,8 @@ namespace Cat
 {
     public class UIManager : MonoBehaviour
     {
-        public SoundManager soundManager;
+        public SoundManager sound_manager;
+        public VideoManager video_manager;
 
         public GameObject play_obj;
 
@@ -21,6 +22,7 @@ namespace Cat
         public TextMeshProUGUI name_text;
 
         public Button start_button;
+        public Button Re_Start_button;
 
         void Awake()
         {
@@ -32,6 +34,7 @@ namespace Cat
         void Start()
         {
             this.start_button.onClick.AddListener(this.OnStartBtn);
+            this.Re_Start_button.onClick.AddListener(this.OnReStartBtn);
         }
 
         public void OnStartBtn()
@@ -43,7 +46,7 @@ namespace Cat
             else
             {
                 // BGM 교체
-                this.soundManager.SetBackgroundMusic("Play");
+                this.sound_manager.SetBackgroundMusic("Play");
 
                 // 플레이 씬 활성화 
                 this.play_obj.SetActive(true);
@@ -62,6 +65,12 @@ namespace Cat
             }
 
         }
-    }
 
+        public void OnReStartBtn()
+        {
+            this.play_obj.SetActive(true);
+            GameManager.ResetPlayUI();
+            this.video_manager.VideoStop();
+        }
+    }
 }

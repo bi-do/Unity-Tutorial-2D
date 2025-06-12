@@ -23,5 +23,10 @@ namespace Cat
             this.video_player.clip = this.clips[index];
             this.video_player.Play();
         }
+
+        public void VideoStop()
+        {
+            this.video_panel.SetActive(false);
+        }
     }
 }

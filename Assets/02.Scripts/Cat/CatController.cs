@@ -14,8 +14,11 @@ public class CatController : MonoBehaviour
     private Rigidbody2D cat_rb;
     private Animator cat_ani;
 
+    /// <summary> 게임 시작시 배치되는 처음 위치 </summary>
+    private Vector2 init_pos;
+
     /// <summary> 클리어에 필요한 사과 개수 </summary>
-    private int clear_count = 1;
+    private int clear_count = 10;
 
     /// <summary> 점프력 </summary>
     public float jump_force = 7f;
@@ -26,11 +29,20 @@ public class CatController : MonoBehaviour
     /// <summary> 실제 로직에서 사용되는 int </summary>
     private int jump_count_real;
 
-    void Start()
+    void Awake()
     {
         this.cat_rb = this.GetComponent<Rigidbody2D>();
         this.cat_ani = this.GetComponent<Animator>();
         this.jump_count_real = this.jump_count;
+
+        this.init_pos = this.transform.position;
+    }
+
+    void OnEnable()
+    {
+        this.transform.position = this.init_pos;
+        this.GetComponent<CircleCollider2D>().enabled = true;
+        this.sound_manager.audio_source.Play();
     }
 
     void Update()
@@ -60,6 +72,7 @@ public class CatController : MonoBehaviour
         this.Jump_Rotate();
     }
 
+    /// <summary> 점프 했을 시 고양이 각도 전환 ( 진짜 점프 하는 것 처럼 ) </summary>
     private void Jump_Rotate()
     {
         var catRotation = this.transform.eulerAngles;
@@ -85,7 +98,8 @@ public class CatController : MonoBehaviour
                 this.GetComponent<CircleCollider2D>().enabled = false;
 
                 fade_UI.SetActive(true);
-                fade_UI.GetComponent<FadeRoutine>().OnFade(3f, Color.white);
+
+                fade_UI.GetComponent<FadeRoutine>().OnFade(3f, Color.white, true);
 
                 StartCoroutine(EndingRoutine(true));
             }
@@ -115,7 +129,7 @@ public class CatController : MonoBehaviour
             this.fade_UI.SetActive(true);
 
             // 화면 페이드 ( 게임 오버 )
-            this.fade_UI.GetComponent<FadeRoutine>().OnFade(3f, Color.black);
+            this.fade_UI.GetComponent<FadeRoutine>().OnFade(3f, Color.black, true);
 
             StartCoroutine(EndingRoutine(false));
         }
@@ -123,11 +137,22 @@ public class CatController : MonoBehaviour
 
     IEnumerator EndingRoutine(bool param_isClear)
     {
-        yield return new WaitForSeconds(5f);
+        this.sound_manager.audio_source.Stop();
+
+        yield return new WaitForSeconds(3.5f);
+
+
         this.video_manager.VideoPlay(param_isClear);
 
-        this.sound_manager.audio_source.mute = true;
-        this.fade_UI.SetActive(false);
+        yield return new WaitForSeconds(1f);
+
+        Color new_color = param_isClear ? Color.white : Color.black;
+        this.fade_UI.GetComponent<FadeRoutine>().OnFade(3f, new_color, false);
         this.game_over_UI.SetActive(false);
+
+        yield return new WaitForSeconds(3f);
+
+        this.transform.parent.gameObject.SetActive(false);
+        this.fade_UI.SetActive(false);
     }
 }

@@ -31,9 +31,17 @@ public class ItemEvent : MonoBehaviour
     /// <summary> 파이프의 최소 높이 </summary>
     private int min_heigt = -9;
 
-    void Start()
+    /// <summary> 게임 시작시 최초 배치 위치 </summary>
+    private Vector2 init_pos;
+
+    void Awake()
     {
-        Item_RePosition(this.transform.position.x);
+        this.init_pos = this.transform.position;
+    }
+
+    void OnEnable()
+    {
+        Item_RePosition(this.init_pos.x);
     }
 
     void Update()
@@ -78,6 +86,5 @@ public class ItemEvent : MonoBehaviour
         this.eat_effect.SetActive(false);
         this.apple.SetActive(false);
         this.pipe.SetActive(false);
-
     }
 }
