@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class Goblin : Monster
 {
-    public override void SetHealth()
+    protected override void Init()
     {
-        this.hp = 20f;
+        this.HP = 3f;
+        this.move_speed = 3f;
     }
 }

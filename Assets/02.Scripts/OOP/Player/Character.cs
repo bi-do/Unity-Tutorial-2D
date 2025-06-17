@@ -9,6 +9,7 @@ public class Character : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             this.current_item.Use();
+           
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
@@ -22,7 +23,7 @@ public class Character : MonoBehaviour
         {
             IDropItem temp_item = other.GetComponent<IDropItem>();
 
-            temp_item.Grab();
+            // temp_item.Grab(this.param_grab_pos);
 
             this.current_item = temp_item;
         }
