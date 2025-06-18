@@ -1,8 +1,21 @@
+using System.Collections;
+using NUnit.Framework.Constraints;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public abstract class Monster : MonoBehaviour
 {
+
+    private SpriteRenderer monster_sprite_renderer;
+    private Animator monster_animator;
+    public SpawnManager spawn_manager;
+
+    private string anim_trigger_hit = "Hit";
+    private string anim_trigger_death = "Death";
+
+    /// <summary> 움직이는 방향 조정 변수 </summary>
     private int dir = 1;
+
 
     [SerializeField]
     private float hp = 3f;
@@ -16,21 +29,27 @@ public abstract class Monster : MonoBehaviour
             if (this.hp <= 0)
             {
                 Debug.Log($"{this.gameObject.name}이 죽었습니다.");
-                Destroy(this.gameObject);
+                StartCoroutine(this.Death());
+                this.spawn_manager.OnDropCoin(this.transform.position);
             }
         }
     }
 
     protected float move_speed = 5f;
+    private bool isMove = true;
 
-    private SpriteRenderer sprite_renderer;
+    private Coroutine prev_coroutine = null;
 
-    protected abstract void Init();
 
     void Start()
     {
-        this.sprite_renderer = this.GetComponent<SpriteRenderer>();
-        this.Init();
+        this.Init_Component();
+        this.Init_Childs();
+    }
+
+    void Update()
+    {
+        Move();
     }
 
     void OnMouseDown()
@@ -38,25 +57,68 @@ public abstract class Monster : MonoBehaviour
         this.Hit(1);
     }
 
+    /// <summary> 몬스터를 상속받는 오브젝트 초기화 </summary>
+    protected abstract void Init_Childs();
 
-    void Update()
+    /// <summary> 몬스터 클래스가 갖고 있는 컴포넌트 할당 </summary>
+    private void Init_Component()
     {
-        Move();
+        this.monster_sprite_renderer = this.GetComponent<SpriteRenderer>();
+        this.monster_animator = this.GetComponent<Animator>();
+        this.spawn_manager = FindFirstObjectByType<SpawnManager>();
     }
 
     private void Move()
     {
-        this.transform.position += Vector3.right * this.move_speed * Time.deltaTime * dir;
-
-        if (this.transform.position.x < -9 || this.transform.position.x > 9)
+        if (!isMove)
+            return;
+        else
         {
-            this.dir *= -1;
-            this.sprite_renderer.flipX = !this.sprite_renderer.flipX;
+
+            this.transform.position += Vector3.right * this.move_speed * Time.deltaTime * dir;
+
+            if (this.transform.position.x < -9 || this.transform.position.x > 9)
+            {
+                this.dir *= -1;
+                this.monster_sprite_renderer.flipX = !this.monster_sprite_renderer.flipX;
+            }
         }
     }
 
-    protected void Hit(float param_damage)
+    private void Hit(float param_damage)
     {
-        this.HP -= param_damage;
+        // 연속 클릭 가능 로직
+        // if (this.prev_coroutine != null)
+        //     StopCoroutine(this.prev_coroutine);
+
+        // 연속 공격 불가능 로직
+        if (!this.isMove)
+            return;
+        else
+        {
+            this.isMove = false;
+            this.monster_animator.SetTrigger(this.anim_trigger_hit);
+
+            this.HP -= param_damage;
+            if (this.HP > 0)
+                this.prev_coroutine = StartCoroutine(this.Hit_Routine());
+        }
+
+    }
+
+    IEnumerator Death()
+    {
+        this.monster_animator.SetTrigger(this.anim_trigger_death);
+
+        yield return new WaitForSeconds(3f);
+
+        Destroy(this.gameObject);
+    }
+
+    /// <summary> 몬스터 피격후 다시 이동 </summary>
+    IEnumerator Hit_Routine()
+    {
+        yield return new WaitForSeconds(0.6f);
+        this.isMove = true;
     }
 }
