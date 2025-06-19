@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1555209039172270733}
   - component: {fileID: 3951318130132857554}
   - component: {fileID: 4123953834065476881}
+  - component: {fileID: 496072531671047531}
   m_Layer: 7
   m_Name: Hp Potion
   m_TagString: Untagged
@@ -102,8 +103,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_LinearDamping: 0.2
+  m_AngularDamping: 0.1
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -115,7 +116,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &4123953834065476881
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -152,3 +153,16 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.275}
   m_Radius: 0.275
+--- !u!114 &496072531671047531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963539556189305677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4f2810da540156448fb9924eb08967d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  potion_type: 0

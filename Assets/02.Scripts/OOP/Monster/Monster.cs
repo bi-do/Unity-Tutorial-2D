@@ -30,7 +30,7 @@ public abstract class Monster : MonoBehaviour
             {
                 Debug.Log($"{this.gameObject.name}이 죽었습니다.");
                 StartCoroutine(this.Death());
-                this.spawn_manager.OnDropCoin(this.transform.position);
+                this.spawn_manager.OnDropItem(this.transform.position);
             }
         }
     }
@@ -54,7 +54,7 @@ public abstract class Monster : MonoBehaviour
 
     void OnMouseDown()
     {
-        this.Hit(1);
+        this.OnHit(1);
     }
 
     /// <summary> 몬스터를 상속받는 오브젝트 초기화 </summary>
@@ -85,7 +85,7 @@ public abstract class Monster : MonoBehaviour
         }
     }
 
-    private void Hit(float param_damage)
+    public void OnHit(float param_damage)
     {
         // 연속 클릭 가능 로직
         // if (this.prev_coroutine != null)
