@@ -15,6 +15,8 @@ public class KnightController_Joystick : MonoBehaviour
     float h, v;
     private Vector3 input_dir;
 
+    private float atk_dmg = 3f;
+
     bool isFalling = false;
     bool isCombo = false;
     bool isAttack = false;
@@ -36,6 +38,7 @@ public class KnightController_Joystick : MonoBehaviour
 
         this.jump_btn.onClick.AddListener(this.Jump);
         this.atk_btn.onClick.AddListener(this.Attack);
+
     }
 
     void Update() // 일반적인 작업
@@ -74,13 +77,17 @@ public class KnightController_Joystick : MonoBehaviour
         {
             if (!isAttack)
             {
+                this.atk_dmg = 3f;
                 this.isAttack = true;
                 this.animator.SetTrigger(this.anim_trigger_atk);
             }
             else
                 this.isCombo = true;
         }
-
+        else
+        {
+            Debug.Log("콤보 공격 시전 중엔 공격 입력이 불가능합니다.");
+        }
     }
 
     private void Move()
@@ -111,25 +118,40 @@ public class KnightController_Joystick : MonoBehaviour
         }
     }
 
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Monster"))
+        {
+            Debug.Log($"{this.atk_dmg} 데미지로 공격");
+        }
+        Debug.Log("공격 판정");
+    }
+
+    // 기본 공격 애니메이션 이벤트 콜백 ( 콤보 공격 사용 여부 체크 )
     private void CheckCombo()
     {
         Debug.Log("Check Combo");
         if (isCombo)
         {
-            Debug.Log("Combo Attack Execute");
+            this.atk_dmg = 5f;
+            // Debug.Log("콤보 공격 시전");
         }
         else
         {
-            Debug.Log("Combo Attack Not Execute");
+            // Debug.Log("콤보 공격 시전 안함");
         }
         animator.SetBool(anim_bool_isCombo, isCombo);
         this.isAttack = false;
     }
 
+    //  콤보 공격 애니메이션 이벤트 콜백 ( 콤보 공격 종료 시에 공격 관련 변수 초기화 )
     private void EndComboAttack()
     {
         this.isAttack = false;
         this.isCombo = false;
         animator.SetBool(anim_bool_isCombo, false);
     }
+
+
 }

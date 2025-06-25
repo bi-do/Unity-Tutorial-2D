@@ -12,8 +12,6 @@ public class JoystickController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private Vector2 start_pos, cur_pos;
 
-    
-
     void Start()
     {
         this.background_UI.SetActive(false);

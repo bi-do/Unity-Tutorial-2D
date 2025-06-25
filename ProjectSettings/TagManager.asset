@@ -12,6 +12,7 @@ TagManager:
   - GameOver
   - Apple
   - Pipe
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -22,8 +23,8 @@ TagManager:
   - Monster
   - Coin
   - Player
-  - 
-  - 
+  - '[Collider] Attack'
+  - Ground
   - 
   - 
   - 
