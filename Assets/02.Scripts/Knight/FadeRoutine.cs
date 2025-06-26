@@ -16,7 +16,7 @@ public class FadeRoutine : MonoBehaviour
         StartCoroutine(this.Fade(param_time, param_color, param_isFade));
     }
 
-    IEnumerator Fade(float fade_time, Color param_color , bool param_isFade)
+    public IEnumerator Fade(float fade_time, Color param_color , bool param_isFade)
     {
         Debug.Log("fade 시작");
         float value;
