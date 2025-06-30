@@ -18,6 +18,7 @@ public class KnightController_Keyboard : MonoBehaviour
     bool isCombo = false;
     bool isAttack = false;
     bool isGround = false;
+    bool isLadder = false;
 
     private string anim_trigger_jump = "Jump";
     private string anim_trigger_atk = "Attack";
@@ -58,6 +59,12 @@ public class KnightController_Keyboard : MonoBehaviour
         this.animator.SetFloat(this.anim_float_joystick_y, input_dir.y);
         Jump();
         Attack();
+        Crouch();
+    }
+    public void Crouch()
+    {
+        int isCrouch = input_dir.y < 0 ? 2 : 1;
+        this.GetComponent<CapsuleCollider2D>().size = new Vector2(1.05f, 1.9f / isCrouch);
     }
 
     private void Jump()
@@ -78,6 +85,10 @@ public class KnightController_Keyboard : MonoBehaviour
             float scale_x = this.input_dir.x > 0 ? 1 : -1;
             this.transform.localScale = new Vector3(scale_x, 1, 1);
         }
+        if (isLadder)
+        {
+            this.knight_rb.linearVelocityY = this.input_dir.y * move_speed;
+        }
 
     }
 
@@ -85,7 +96,7 @@ public class KnightController_Keyboard : MonoBehaviour
     {
         if (isFalling)
             return;
-        else if (this.knight_rb.linearVelocityY < 0)
+        else if (this.knight_rb.linearVelocityY < 0 && !this.isGround)
         {
             this.animator.SetBool(this.anim_bool_isFall, true);
             isFalling = true;
@@ -94,7 +105,7 @@ public class KnightController_Keyboard : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl) &&isGround)
+        if (Input.GetKeyDown(KeyCode.LeftControl) && isGround)
         {
             if (!isCombo)
             {
@@ -123,14 +134,39 @@ public class KnightController_Keyboard : MonoBehaviour
             this.isGround = true;
         }
     }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            this.isGround = false;
+        }
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Monster"))
         {
             Debug.Log($"{this.atk_dmg} 데미지로 공격");
         }
-        Debug.Log("공격 판정");
+        if (other.CompareTag("Ladder"))
+        {
+            this.isLadder = true;
+            this.knight_rb.gravityScale = 0;
+            this.knight_rb.linearVelocity = Vector2.zero;
+        }
     }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            this.isLadder = false;
+            this.knight_rb.gravityScale = 2f;
+            this.knight_rb.linearVelocity = Vector2.zero;
+        }
+    }
+
+
 
     // 기본 공격 애니메이션 이벤트 콜백 ( 콤보 공격 사용 여부 체크 )
     private void CheckCombo()

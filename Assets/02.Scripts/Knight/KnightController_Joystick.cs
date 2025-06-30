@@ -20,10 +20,10 @@ public class KnightController_Joystick : MonoBehaviour
         this.knight_rb = this.GetComponent<Rigidbody2D>();
     }
 
-    void Update() // 일반적인 작업
-    {
+    // void Update() // 일반적인 작업
+    // {
 
-    }
+    // }
 
     private void FixedUpdate() // 물리적인 작업
     {
@@ -62,8 +62,4 @@ public class KnightController_Joystick : MonoBehaviour
     {
 
     }
-
-
-
-
 }
