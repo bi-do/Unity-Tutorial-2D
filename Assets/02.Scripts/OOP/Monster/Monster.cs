@@ -35,7 +35,10 @@ public abstract class Monster : MonoBehaviour
         }
     }
 
+    /// <summary> 이동속도 </summary>
     protected float move_speed = 5f;
+    /// <summary>  움직이는 범위 </summary>
+    protected float move_range = 9f;
     private bool isMove = true;
 
     private Coroutine prev_coroutine = null;
@@ -77,7 +80,7 @@ public abstract class Monster : MonoBehaviour
 
             this.transform.position += Vector3.right * this.move_speed * Time.deltaTime * dir;
 
-            if (this.transform.position.x < -9 || this.transform.position.x > 9)
+            if (this.transform.position.x < -this.move_range || this.transform.position.x > this.move_range)
             {
                 this.dir *= -1;
                 this.monster_sprite_renderer.flipX = !this.monster_sprite_renderer.flipX;
