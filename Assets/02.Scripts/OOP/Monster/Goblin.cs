@@ -17,10 +17,11 @@ public class Goblin : MonsterCore
 
     protected override void Init()
     {
-        base.Init();
-        this.hp = 10f;
+        this.max_hp = 30f;
         this.speed = 3f;
         this.attack_time = 2f;
+        this.atk_dmg = 10f;
+        base.Init();
     }
 
     public override void Idle()
@@ -33,7 +34,6 @@ public class Goblin : MonsterCore
             this.patrol_time = Random.Range(1f, 5f);
 
             this.animator.SetBool(this.anim_bool_isRun, true);
-
             this.monster_state = MonsterState.PATROL;
 
             // pos 기반 이동 ( Lerp )
@@ -61,7 +61,6 @@ public class Goblin : MonsterCore
             this.monster_rb.linearVelocityX = 0f;
 
             this.timer = 0f;
-
             this.idle_time = Random.Range(1f, 5f);
 
             this.animator.SetBool(this.anim_bool_isRun, false);
@@ -73,31 +72,17 @@ public class Goblin : MonsterCore
 
     public override void TRACE()
     {
-        // 몬스터 기준에서 플레이어가 존재하는 방향
-        this.dir_x = (this.target_tf.position - this.transform.position).normalized.x;
-
-        if (this.dir_x < 0)
-        {
-            this.dir_x = Mathf.FloorToInt(dir_x);
-
-        }
-        else
-            this.dir_x = Mathf.CeilToInt(dir_x);
-
+        LookEnemy();
         this.monster_rb.linearVelocityX = this.dir_x * this.speed;
-
-        this.transform.localScale = new Vector3(this.dir_x, 1, 1);
 
         if (this.target_dist > this.trace_dist) // 몬스터의 추격 범위에서 플레이어가 벗어났을 시
         {
             this.animator.SetBool(this.anim_bool_isRun, false);
             ChangeState(MonsterState.IDLE);
         }
-
         if (this.target_dist < attack_dist) // 플레이어가 몬스터의 공격 범위 내에 있을 시
         {
             ChangeState(MonsterState.ATTACK);
-            Debug.Log("공격 범위 내");
         }
     }
 
@@ -112,14 +97,18 @@ public class Goblin : MonsterCore
         this.isAttack = true;
         animator.SetTrigger(this.anim_trigger_isAttack);
 
+        float cur_anim_length = this.animator.GetCurrentAnimatorStateInfo(0).length;
+
         // 공격 시전 시간 ( 애니메이션 이벤트로 바꿀 필요 있음 , 동기화 필요 )
-        yield return new WaitForSeconds(1f); 
+        yield return new WaitForSeconds(cur_anim_length);
+
+        LookEnemy();
 
         this.isAttack = false;
         this.timer = 0f;
 
-        this.animator.SetBool(this.anim_bool_isRun, false);
-        ChangeState(MonsterState.IDLE);
+        // this.animator.SetBool(this.anim_bool_isRun, false);
+        ChangeState(MonsterState.TRACE);
     }
 
     /// <summary> Patrol 방향 랜덤 지정 </summary>
@@ -128,6 +117,7 @@ public class Goblin : MonsterCore
         int ran_value = Random.Range(0, 2);
         this.dir_x = ran_value == 0 ? 1 : -1;
         this.transform.localScale = new Vector3(this.dir_x, 1, 1);
+        this.hp_bar_UI.gameObject.transform.localScale = new Vector3(this.dir_x, 1, 1);
     }
 
     /// <summary> Trace 진입 체크 </summary>
@@ -141,7 +131,9 @@ public class Goblin : MonsterCore
         Vector3 player_dir = (this.target_tf.position - this.transform.position).normalized;
 
         // 두 벡터의 내적 ( 음수 = 반대 , 양수 = 평행 )
-        this.isTrace = Vector3.Dot(monster_dir, player_dir) > 0 ? true : false;
+        float dot_value = Vector3.Dot(monster_dir, player_dir);
+
+        this.isTrace = dot_value > 0.5f && dot_value <= 1f ? true : false;
         if (this.target_dist <= trace_dist && isTrace)
         {
             this.timer = 0f;
@@ -149,4 +141,14 @@ public class Goblin : MonsterCore
             ChangeState(MonsterState.TRACE);
         }
     }
+
+    private void LookEnemy()
+    {
+        // 몬스터 기준에서 플레이어가 존재하는 방향
+        float target_dir = (this.target_tf.position - this.transform.position).normalized.x;
+        this.dir_x = target_dir < 0 ? -1 : 1;
+        this.transform.localScale = new Vector3(this.dir_x, 1, 1);
+        this.hp_bar_UI.gameObject.transform.localScale = new Vector3(this.dir_x, 1, 1);
+    }
+
 }

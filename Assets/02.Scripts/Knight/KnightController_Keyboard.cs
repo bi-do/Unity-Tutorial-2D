@@ -1,18 +1,23 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class KnightController_Keyboard : MonoBehaviour
+public class KnightController_Keyboard : MonoBehaviour, IDamageable
 {
     private Animator animator;
     private Rigidbody2D knight_rb;
+    private Collider2D knight_coll;
+
+    [SerializeField] Image hp_bar_UI;
 
     private Vector3 input_dir;
-    [SerializeField]
-    private float move_speed = 3f;
+    [SerializeField] private float move_speed = 3f;
     private float jump_power = 20f;
+    [SerializeField] private float max_hp = 100f;
+    public float cur_hp;
+    private float atk_dmg = 10f;
 
+    /// <summary> 키보드 입력으로 받는 X,Y 변수 </summary>
     float h, v;
-
-    private float atk_dmg = 3f;
 
     bool isFalling = false;
     bool isCombo = false;
@@ -22,6 +27,7 @@ public class KnightController_Keyboard : MonoBehaviour
 
     private string anim_trigger_jump = "Jump";
     private string anim_trigger_atk = "Attack";
+    private string anim_trigger_death = "Death";
 
     private string anim_bool_isFall = "isFall";
     private string anim_bool_isCombo = "isCombo";
@@ -33,6 +39,9 @@ public class KnightController_Keyboard : MonoBehaviour
     {
         this.animator = this.GetComponent<Animator>();
         this.knight_rb = this.GetComponent<Rigidbody2D>();
+        this.knight_coll = this.GetComponent<Collider2D>();
+        this.cur_hp = this.max_hp;
+        this.hp_bar_UI.fillAmount = this.cur_hp / this.max_hp;
     }
 
     void Update() // 일반적인 작업
@@ -61,10 +70,12 @@ public class KnightController_Keyboard : MonoBehaviour
         Attack();
         Crouch();
     }
+
     public void Crouch()
     {
-        int isCrouch = input_dir.y < 0 ? 2 : 1;
+        float isCrouch = input_dir.y < 0 ? 2f : 1f;
         this.GetComponent<CapsuleCollider2D>().size = new Vector2(1.05f, 1.9f / isCrouch);
+        this.GetComponent<CapsuleCollider2D>().offset = new Vector2(0, 0.95f / isCrouch + 0.05f * (isCrouch - 1));
     }
 
     private void Jump()
@@ -111,7 +122,7 @@ public class KnightController_Keyboard : MonoBehaviour
             {
                 if (!isAttack)
                 {
-                    this.atk_dmg = 3f;
+                    // this.atk_dmg = 3f;
                     this.isAttack = true;
                     this.animator.SetTrigger(this.anim_trigger_atk);
                 }
@@ -142,11 +153,16 @@ public class KnightController_Keyboard : MonoBehaviour
             this.isGround = false;
         }
     }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Monster"))
         {
-            Debug.Log($"{this.atk_dmg} 데미지로 공격");
+            if (other.GetComponent<IDamageable>() != null)
+            {
+                Debug.Log("어택함");
+                other.GetComponent<IDamageable>().TakeDamage(this.atk_dmg);
+            }
         }
         if (other.CompareTag("Ladder"))
         {
@@ -166,15 +182,13 @@ public class KnightController_Keyboard : MonoBehaviour
         }
     }
 
-
-
     // 기본 공격 애니메이션 이벤트 콜백 ( 콤보 공격 사용 여부 체크 )
     private void CheckCombo()
     {
         Debug.Log("Check Combo");
         if (isCombo)
         {
-            this.atk_dmg = 5f;
+            this.atk_dmg = this.atk_dmg * 1.5f;
             // Debug.Log("콤보 공격 시전");
         }
         else
@@ -193,4 +207,21 @@ public class KnightController_Keyboard : MonoBehaviour
         animator.SetBool(anim_bool_isCombo, false);
     }
 
+    public void TakeDamage(float param_damage)
+    {
+        cur_hp -= param_damage;
+
+        this.hp_bar_UI.fillAmount = cur_hp / max_hp;
+        if (cur_hp <= 0f)
+        {
+            Death();
+        }
+    }
+
+    public void Death()
+    {
+        this.animator.SetTrigger(anim_trigger_death);
+        this.GetComponent<Collider2D>().enabled = false;
+        this.knight_rb.gravityScale = 0f;
+    }
 }
