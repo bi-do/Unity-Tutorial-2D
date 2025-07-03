@@ -63,7 +63,7 @@ public abstract class MonsterCore : MonoBehaviour, IDamageable
     {
         if (isDead)
             return;
-    
+
         this.target_dist = Vector3.Distance(this.transform.position, this.target_tf.position);
         switch (this.monster_state)
         {
@@ -130,6 +130,14 @@ public abstract class MonsterCore : MonoBehaviour, IDamageable
 
         this.isDead = true;
 
-        this.item_manager.OnDropItem(this.transform.position);
+        int item_count = Random.Range(0, 3);
+        if (item_count > 0)
+        {
+            for (int i = 0; i < item_count; i++)
+            {
+                this.item_manager.OnDropItem(this.transform.position);
+            }
+        }
+
     }
 }

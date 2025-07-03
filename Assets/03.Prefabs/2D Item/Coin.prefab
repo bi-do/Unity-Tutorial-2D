@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5801235496044279517}
   - component: {fileID: 9069519341471162492}
   - component: {fileID: 5529791553671224295}
-  - component: {fileID: -8642216894436509520}
+  - component: {fileID: -367395202995402278}
   m_Layer: 7
   m_Name: Coin
   m_TagString: Untagged
@@ -154,7 +154,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-8642216894436509520
+--- !u!114 &-367395202995402278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

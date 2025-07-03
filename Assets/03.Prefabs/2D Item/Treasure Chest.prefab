@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6860367901786091638}
   - component: {fileID: 1191956969392997801}
   - component: {fileID: 2059872982154461300}
-  - component: {fileID: -6324377514025294885}
+  - component: {fileID: 4199500222288331438}
   m_Layer: 7
   m_Name: Treasure Chest
   m_TagString: Untagged
@@ -163,7 +163,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 0.7}
   m_EdgeRadius: 0
---- !u!114 &-6324377514025294885
+--- !u!114 &4199500222288331438
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
